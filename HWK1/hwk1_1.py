@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 " The cubic formula (Figure 1, left): C(t) = (1−t)³b₀ + 3t(1−t)²b₁ + 3t²(1−t)b₂ + t³b₃ "
+# 依三次 Bézier 公式，在 t = 0 到 1 之間均勻取樣曲線座標
 def bezier_formula(p0,p1,p2,p3,num_points):
     curve=[]
     for i in range(num_points):
@@ -12,6 +13,7 @@ def bezier_formula(p0,p1,p2,p3,num_points):
 
     return np.array(curve)
 
+# 逐層取控制點的中點，得到左右兩段 Bézier 曲線的控制點
 def split_bezier(p0,p1,p2,p3):
     a = (p0+p1)/2
     b = (p1+p2)/2
@@ -26,6 +28,7 @@ def split_bezier(p0,p1,p2,p3):
     right = (f,e,c,p3)
     return left,right
 
+# 遞迴細分曲線，深度為零時以起點與終點形成線段
 def midpoint_curve(p0,p1,p2,p3,depth):
     if depth ==0:
         return [p0,p3]
@@ -33,16 +36,19 @@ def midpoint_curve(p0,p1,p2,p3,depth):
 
     left_points= midpoint_curve(*left,depth-1)
     right_points= midpoint_curve(*right,depth-1)
+    # 合併左右取樣點時，移除重複的共同接點
     return left_points[:-1]+ right_points
 
     
 if __name__ == "__main__":
 
+ # 設定四個控制點，供公式法與中點細分法共同使用
  p0 = np.array([50.0,300.0])       
  p1 = np.array([150.0, 50.0])
  p2 = np.array([350.0, 50.0])
  p3 = np.array([450.0, 300.0])
 #A圖
+ # 計算公式法取樣點，交由繪圖函式顯示已算出的座標
  answer = bezier_formula(p0,p1,p2,p3,1000)
  plt.plot(
     answer[:, 0],
@@ -61,6 +67,7 @@ if __name__ == "__main__":
  plt.legend()
  plt.show()
 # B圖
+ # 使用深度 10 的中點細分結果顯示曲線
  mid_points = midpoint_curve(p0,p1,p2,p3,10)
  mid_points = np.array(mid_points)
  plt.plot(
@@ -76,6 +83,7 @@ if __name__ == "__main__":
  plt.show()
 
 # A and B  different
+ # 計算公式法取樣點，交由繪圖函式顯示已算出的座標
  answer = bezier_formula(p0,p1,p2,p3,1000)
  plt.plot(
     answer[:, 0],
@@ -88,6 +96,7 @@ if __name__ == "__main__":
     control_points[:, 1],
     label="Control Points"
  )
+ # 使用較低的細分深度，觀察折線與公式曲線的差異
  mid_points = midpoint_curve(p0,p1,p2,p3,3)
  mid_points = np.array(mid_points)
  plt.plot(

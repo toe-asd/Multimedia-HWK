@@ -53,7 +53,7 @@ def get_scanline_info(path, y):
 
         x1, y1 = p1
         x2, y2 = p2
-
+         #下面依樣是判斷
         if y1 == y2:
             continue
 
@@ -78,21 +78,6 @@ def get_scanline_info(path, y):
 
     return crossings, winding_steps
 
-def draw_path_arrows(path, step=20, color="red"):
-    for i in range(0, len(path), step):
-        p1 = path[i]
-        p2 = path[(i + 1) % len(path)]
-
-        plt.annotate(
-            "",
-            xy=(p2[0], p2[1]),
-            xytext=(p1[0], p1[1]),
-            arrowprops=dict(
-                arrowstyle="->",
-                color=color,
-                lw=1.5
-            )
-        )
 
 if __name__ == "__main__":
 
@@ -139,14 +124,7 @@ if __name__ == "__main__":
  path_x = [p[0] for p in polygon] + [polygon[0][0]]
  path_y = [p[1] for p in polygon] + [polygon[0][1]]
 
- plt.plot(
-    path_x,
-    path_y,
-    color="red",
-    linewidth=2,
-    label="Path"
- )
-
+ 
 # 顯示 scanline
  plt.axhline(
     y=test_y,

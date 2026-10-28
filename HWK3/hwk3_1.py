@@ -4,6 +4,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
+# 取得目前檔案位置，設定匯入共用填色模組的搜尋路徑
 current_dir = os.path.dirname(
     os.path.abspath(__file__)
 )
@@ -18,8 +19,10 @@ sys.path.append(hwk_dir)
 from HWK2.hwk2_1 import scanline_fill
 
 
+# 將每個頂點繞指定中心旋轉 degree 度，回傳旋轉後的路徑
 def rotate_path(path, cx, cy, degree):
 
+    # 將角度轉為弧度，供三角函式計算旋轉矩陣
     angle = math.radians(degree)
     cos_a = math.cos(angle)
     sin_a = math.sin(angle)
@@ -41,9 +44,11 @@ def rotate_path(path, cx, cy, degree):
     return new_path
 
 
+# 先以 k 倍解析度自行填色，再平均每個像素的 k × k 個子像素
 def supersample_render(subpaths, width,height, k):
     scaled_subpaths = []
 
+    # 將所有路徑座標放大 k 倍，對應高解析度像素網格
     for path in subpaths:
 
         scaled_path = []
@@ -56,6 +61,7 @@ def supersample_render(subpaths, width,height, k):
     high_width = width * k
     high_height = height * k
 
+    # 呼叫共用掃描線實作，決定高解析度網格中哪些像素被覆蓋
     high_canvas = scanline_fill(
         scaled_subpaths,
         high_width,
@@ -64,6 +70,7 @@ def supersample_render(subpaths, width,height, k):
 
 
 
+    # 將陣列整理為原始列、子像素列、原始欄、子像素欄，平均子像素兩軸
     canvas = high_canvas.reshape(height,k,width,k).mean(axis=(1, 3))
 
     return canvas
@@ -86,14 +93,17 @@ if __name__ == "__main__":
         (133, 410)
     ]
 
+    # 將星形繞中心旋轉 5 度，觀察斜邊的鋸齒現象
     rotated_star = rotate_path(star, x,y,5)
     subpaths = [rotated_star]
     ks = [ 1,2,4,8]
     results = {}
+    # 分別產生 k = 1、2、4、8 的像素結果
     for k in ks:
         canvas = supersample_render( subpaths,width, height,k )
         results[k] = canvas
 
+    # 建立四個子圖，方便比較不同取樣倍率的結果
     fig, axes = plt.subplots(
         2,
         2,
@@ -101,6 +111,7 @@ if __name__ == "__main__":
     )
 
 
+    # 顯示已自行計算的像素陣列，並標示對應倍率
     for ax, k in zip(axes.flat,ks):
 
         ax.imshow(

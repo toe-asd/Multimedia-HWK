@@ -3,7 +3,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
-from hwk2_1 import scanline_fill,draw_path_arrows
+from hwk2_1 import scanline_fill
 # hwk2_3.py 所在位置：HWK/HWK2
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -154,9 +154,8 @@ if __name__=="__main__":
    "white",'blue'
     ])
 #畫出same
-  # =========================
 # Figure 1：same direction
-# =========================
+
 
    plt.figure(figsize=(7, 7))
 
@@ -168,17 +167,6 @@ if __name__=="__main__":
     vmax=255
 )
 
-   draw_path_arrows(
-    outer_circle,
-    step=16,
-    color="red"
-)
-
-   draw_path_arrows(
-    inner_circle,
-    step=16,
-    color="orange"
-)
 
    plt.scatter(
     x,
@@ -198,9 +186,8 @@ if __name__=="__main__":
    plt.axis("equal")
 
 
-# =========================
 # Figure 2：reverse direction
-# =========================
+
 
    plt.figure(figsize=(7, 7))
 
@@ -212,17 +199,6 @@ if __name__=="__main__":
     vmax=255
 )
 
-   draw_path_arrows(
-    outer_circle,
-    step=16,
-    color="red"
-)
-
-   draw_path_arrows(
-    inner_circle_reverse,
-    step=16,
-    color="orange"
-)
 
    plt.scatter(
     x,
